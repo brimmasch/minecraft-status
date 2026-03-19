@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 18% 8%;
+    --foreground: 210 40% 96%;
+    --card: 240 16% 12%;
+    --card-foreground: 210 40% 96%;
+    --primary: 184 82% 45%;
+    --primary-foreground: 240 18% 8%;
+    --secondary: 262 68% 58%;
+    --secondary-foreground: 210 40% 96%;
+    --muted: 240 10% 18%;
+    --muted-foreground: 215 20% 70%;
+    --accent: 46 100% 54%;
+    --accent-foreground: 240 18% 8%;
+    --border: 240 10% 24%;
+    --input: 240 10% 24%;
+    --ring: 184 82% 45%;
+    --radius: 1rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(0, 255, 200, 0.2), transparent 45%),
+      radial-gradient(circle at 80% 10%, rgba(140, 100, 255, 0.22), transparent 40%),
+      radial-gradient(circle at 50% 90%, rgba(255, 190, 70, 0.15), transparent 35%);
+  }
+}
+
+.artwork-panel {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid hsl(var(--border));
+  background:
+    linear-gradient(120deg, rgba(8, 180, 210, 0.28), rgba(120, 20, 200, 0.26)),
+    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.22), transparent 35%),
+    radial-gradient(circle at 70% 70%, rgba(255, 226, 130, 0.2), transparent 35%);
+}
+
+.artwork-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.35;
+}

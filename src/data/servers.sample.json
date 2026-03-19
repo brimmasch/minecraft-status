@@ -1,0 +1,24 @@
+[
+  {
+    "id": "my-survival",
+    "name": "My Survival Server",
+    "address": "play.example.net",
+    "website": "https://example.net",
+    "description": "A friendly vanilla survival community.",
+    "artwork": "crystal"
+  },
+  {
+    "id": "my-minigames",
+    "name": "My Minigames Server",
+    "address": "games.example.net",
+    "description": "Competitive minigames and events.",
+    "artwork": "neon"
+  },
+  {
+    "id": "my-creative",
+    "name": "My Creative Server",
+    "address": "build.example.net",
+    "description": "Large-scale creative builds and showcases.",
+    "artwork": "sunset"
+  }
+]

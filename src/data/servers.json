@@ -1,0 +1,24 @@
+[
+  {
+    "id": "survival",
+    "name": "GAPA Minecraft",
+    "address": "www.limmish.com:63008",
+    "website": "https://www.limmish.com",
+    "description": "A funny, little minecraft server for GAPA DSU.",
+    "artwork": "crystal"
+  },
+  {
+    "id": "deathmatch",
+    "name": "GAPA Deathmatch Minecraft",
+    "address": "www.limmish.com:63009",
+    "description": "Where you come to resolve your differences with your coworkers in a friendly deathmatch environment.",
+    "artwork": "neon"
+  },
+  {
+    "id": "creative",
+    "name": "GAPA Creative Minecraft",
+    "address": "www.limmish.com:63010",
+    "description": "Large-scale collaborative creative builds and showcases.",
+    "artwork": "sunset"
+  }
+]
