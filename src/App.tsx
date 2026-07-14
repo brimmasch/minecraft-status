@@ -94,7 +94,11 @@ function App() {
   };
 
   useEffect(() => {
-    fetch(`${import.meta.env.BASE_URL}servers.json`)
+    // Resolve servers.json relative to this bundle's URL so the app works
+    // under any domain/subpath. The bundle lives at <base>/assets/*.js, so
+    // "../servers.json" points at <base>/servers.json regardless of trailing slash.
+    const configUrl = new URL(/* @vite-ignore */ "../servers.json", import.meta.url);
+    fetch(configUrl)
       .then((response) => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         return response.json();
