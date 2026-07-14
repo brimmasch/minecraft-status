@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { AlertCircle, ExternalLink, RefreshCw, Server, Users } from "lucide-react";
 
-import serversConfig from "@/data/servers.json";
 import { HeroArtwork } from "@/components/HeroArtwork";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -28,8 +27,6 @@ type ServerStatus = {
 type StatusMap = Record<string, ServerStatus | null>;
 type ErrorMap = Record<string, string | null>;
 
-const servers = serversConfig as ServerConfig[];
-
 const artworkStyles: Record<ServerConfig["artwork"], string> = {
   crystal:
     "bg-[radial-gradient(circle_at_20%_20%,rgba(80,240,255,0.45),transparent_40%),radial-gradient(circle_at_80%_70%,rgba(200,120,255,0.35),transparent_42%),linear-gradient(135deg,rgba(12,26,64,0.8),rgba(40,10,70,0.9))]",
@@ -40,20 +37,22 @@ const artworkStyles: Record<ServerConfig["artwork"], string> = {
 };
 
 function App() {
+  const [servers, setServers] = useState<ServerConfig[]>([]);
+  const [configError, setConfigError] = useState<string | null>(null);
   const [statusById, setStatusById] = useState<StatusMap>({});
   const [errorsById, setErrorsById] = useState<ErrorMap>({});
   const [loading, setLoading] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
   const [cooldown, setCooldown] = useState(false);
 
-  const fetchStatuses = async () => {
-    if (loading || cooldown) return;
+  const fetchStatuses = async (serverList: ServerConfig[]) => {
+    if (loading || cooldown || serverList.length === 0) return;
     setLoading(true);
     setCooldown(true);
     setTimeout(() => setCooldown(false), 15000);
 
     const entries = await Promise.all(
-      servers.map(async (server) => {
+      serverList.map(async (server) => {
         try {
           const response = await fetch(`https://api.mcsrvstat.us/2/${server.address}`);
           if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -95,10 +94,25 @@ function App() {
   };
 
   useEffect(() => {
-    fetchStatuses();
-    const interval = setInterval(fetchStatuses, 60000);
-    return () => clearInterval(interval);
+    fetch(`${import.meta.env.BASE_URL}servers.json`)
+      .then((response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+      })
+      .then((data: ServerConfig[]) => {
+        setServers(data);
+        fetchStatuses(data);
+      })
+      .catch((error) => {
+        setConfigError(error instanceof Error ? error.message : "Failed to load config");
+      });
   }, []);
+
+  useEffect(() => {
+    if (servers.length === 0) return;
+    const interval = setInterval(() => fetchStatuses(servers), 60000);
+    return () => clearInterval(interval);
+  }, [servers]);
 
   const totalOnline = useMemo(
     () => Object.values(statusById).reduce((acc, s) => acc + (s?.playersOnline ?? 0), 0),
@@ -127,7 +141,7 @@ function App() {
                 </CardDescription>
               </div>
               <div className="flex flex-wrap items-center justify-center gap-3">
-                <Button onClick={fetchStatuses} disabled={loading || cooldown}>
+                <Button onClick={() => fetchStatuses(servers)} disabled={loading || cooldown}>
                   <RefreshCw className={`mr-2 h-4 w-4 ${loading ? "animate-spin" : ""}`} />
                   Refresh Status
                 </Button>
@@ -152,7 +166,11 @@ function App() {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 className="text-2xl font-semibold">Servers</h2>
             <p className="text-sm text-muted-foreground">
-              {lastUpdated ? `Updated ${lastUpdated.toLocaleTimeString()}` : "Loading status..."}
+              {configError
+                ? `Failed to load server config: ${configError}`
+                : lastUpdated
+                  ? `Updated ${lastUpdated.toLocaleTimeString()}`
+                  : "Loading status..."}
             </p>
           </div>
 

@@ -38,9 +38,14 @@ docker compose up --build -d
 
 ## Server Configuration
 
-Edit server entries in:
+Server entries are loaded **at runtime** from:
 
-- `src/data/servers.json`
+- `public/servers.json`
+
+Because it is fetched at runtime (not bundled into the JavaScript), you can edit
+this file and simply refresh the browser — no rebuild required. In a deployed
+build the same file is served from `dist/servers.json`, so you can edit it live
+on the host as well.
 
 Each server uses this shape:
 
@@ -62,10 +67,10 @@ Each server uses this shape:
 - `description`: card subtitle
 - `artwork`: one of `crystal`, `neon`, `sunset`
 
-A starter template is available at `src/data/servers.sample.json` — copy it to `servers.json` and replace the addresses with your own:
+A starter template is available at `public/servers.sample.json` — copy it to `servers.json` and replace the addresses with your own:
 
 ```bash
-cp src/data/servers.sample.json src/data/servers.json
+cp public/servers.sample.json public/servers.json
 ```
 
 ## Notes
